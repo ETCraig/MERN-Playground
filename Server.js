@@ -1,6 +1,20 @@
 const express = require('express');
+const connectDB = require('./config/db');
+const passport = require('passport');
+const path = require('path');
+const delegateRoutes = require('./routes/delegateRoutes');
 
 const app = express();
+
+connectDB();
+
+app.use(express.json({ extended: false }));
+
+app.use(passport.initialize());
+
+require('./middleware/Authentication')(passport);
+
+delegateRoutes(app);
 
 //Serve Static Assets
 if (process.env.NODE_ENV === 'production') {
